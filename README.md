@@ -10,9 +10,9 @@ O objetivo deste projeto de extensão é estudar e conhecer sobre o que é, como
 
 ## Equipe de Desenvolvimento
 
-- **Mateus Mendes** - RA: 10417820
--
-- 
+- **Mateus Mendes Cabral** - RA: 10417820
+- **Luiz Alberto Silva Mota** - RA: 10436776
+- **Lucas Francilliano da Silva** - RA: 10424215
 -
 
 ## Tecnologias Utilizadas
