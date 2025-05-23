@@ -5,6 +5,13 @@ from cenas.jogo import Jogo
 class Menu:
     def __init__(self):
         pygame.init()
+
+        # Carregar efeitos sonoros
+        pygame.mixer.init()
+        
+        self.som_menu = pygame.mixer.Sound("sons/menu.mp3")
+
+        self.som_opcao_menu = pygame.mixer.Sound("sons/opcao.mp3")
         
         # Configurações da tela
         self.largura_tela = 800
@@ -80,6 +87,7 @@ class Menu:
             self.tela.blit(texto, (self.largura_tela // 2 - 100, 240 + i * 60))
     
     def mostrar_instrucoes(self):
+
         self.tela.fill(self.VERDE_CLARO)
         
         # Título
@@ -157,8 +165,10 @@ class Menu:
                 
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_UP:
+                    self.som_opcao_menu.play() # Desencadeia efeito sonoro de opção do menu
                     self.opcao_selecionada = (self.opcao_selecionada - 1) % len(self.opcoes)
                 elif evento.key == pygame.K_DOWN:
+                    self.som_opcao_menu.play() # Desencadeia efeito sonoro de opção do menu
                     self.opcao_selecionada = (self.opcao_selecionada + 1) % len(self.opcoes)
                 elif evento.key == pygame.K_RETURN:
                     self.selecionar_opcao()
@@ -166,6 +176,7 @@ class Menu:
     def selecionar_opcao(self):
         if self.opcao_selecionada == 0:  # Iniciar Jogo
             jogo = Jogo()
+            self.som_menu.stop() # Para a música do menu
             jogo.run()
         elif self.opcao_selecionada == 1:  # Como Jogar
             self.mostrar_instrucoes()
@@ -174,6 +185,7 @@ class Menu:
             sys.exit()
     
     def run(self):
+        self.som_menu.play(-1)  # Com -1 a música toca em loop
         while True:
             self.processar_eventos()
             

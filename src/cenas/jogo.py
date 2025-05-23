@@ -1,16 +1,25 @@
 import pygame
 import random
+import threading
 import sys
 from entidades.jogador import Jogador
 from entidades.lixo import Lixo
 
+# Variáveis globais
+LARGURA_TELA = 800
+ALTURA_TELA = 600
+
 class Jogo:
     def __init__(self):
         pygame.init()
+
+        pygame.mixer.init()
+        self.som_fim_jogo = pygame.mixer.Sound("sons/gameover.mp3")
+        self.som_coleta_lixos = pygame.mixer.Sound("sons/coleta.mp3")
         
         # Configurações da tela
-        self.largura_tela = 800
-        self.altura_tela = 600
+        self.largura_tela = LARGURA_TELA
+        self.altura_tela = ALTURA_TELA
         self.tela = pygame.display.set_mode((self.largura_tela, self.altura_tela))
         pygame.display.set_caption('ReciclaMack')
         
@@ -61,7 +70,13 @@ class Jogo:
         self.lixo_para_proximo_nivel = 10
         
     def desenhar_fundo(self):
-        # Desenha o céu
+
+        imagem_fundo = pygame.image.load( 'imagens/cenario.jpeg').convert_alpha()
+        imagem_fundo = pygame.transform.scale(imagem_fundo, (LARGURA_TELA,ALTURA_TELA))
+        self.tela.blit(imagem_fundo, (0,0))
+
+        # Código abaixo se refere ao cenário genérico
+        ''' # Desenha o céu
         self.tela.fill(self.AZUL_CLARO)
         
         # Desenha a grama/chão
@@ -77,7 +92,7 @@ class Jogo:
             pygame.draw.circle(self.tela, self.BRANCO, (x + 20, 70), raio)
             pygame.draw.circle(self.tela, self.BRANCO, (x + 40, 80), raio)
             
-        # As lixeiras foram removidas conforme solicitado
+        # As lixeiras foram removidas conforme solicitado'''
     
     def desenhar_hud(self):
         # Pontuação
@@ -248,6 +263,7 @@ class Jogo:
             if lixo.update():  # Lixo caiu no chão
                 self.vidas -= 1
                 if self.vidas <= 0:
+                    self.som_fim_jogo.play()
                     self.jogo_ativo = False
                     self.game_over = True
                     self.opcao_game_over_selecionada = 0  # Reset da seleção
@@ -255,6 +271,7 @@ class Jogo:
         # Verifica colisões (coleta de lixo)
         colisoes = pygame.sprite.spritecollide(self.jogador.sprite, self.grupo_lixos, True)
         for lixo in colisoes:
+            self.som_coleta_lixos.play()
             self.pontuacao += lixo.pontos
             
             # Verifica se alcançou pontos para próximo nível
